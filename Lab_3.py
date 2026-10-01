@@ -1,6 +1,6 @@
-import Storage
+import storage
 import Crud_operations
-import Search
+import search
 import analytics
 
 
@@ -78,19 +78,19 @@ def update_points_dialog(table: dict) -> None:
 
 
 def search_team_dialog(table: dict) -> None:
-    """Пошук команди за назвою через Search.py."""
+    """Пошук команди за назвою через search.py."""
     query = input("Введіть назву команди для пошуку: ").strip()
-    result = Search.find_case_insensitive(table, query)
+    result = search.find_case_insensitive(table, query)
     if result is not None:
         print(f"Команда '{query}' знайдена та має в активі {result} балів.")
     else:
-        print(f"[Не знайдено команду '{query}' не знайдено.")
+        print(f"Не знайдено команду '{query}' не знайдено.")
 
 
 def reverse_search_dialog(table: dict) -> None:
-    """Зворотний пошук команди за кількістю балів через Search.py."""
+    """Зворотний пошук команди за кількістю балів через search.py."""
     query = input("Введіть кількість балів для пошуку команди: ").strip()
-    results = Search.reverse_search(table, query)
+    results = search.reverse_search(table, query)
     if results:
         print(f"Команди з показником {query} балів знайдено: {', '.join(results)}")
     else:
@@ -115,8 +115,8 @@ def show_menu() -> None:
 
 
 def main() -> None:
-    # Завантаження таблиці через модуль Storage.py
-    tournament_table = Storage.load_dictionary("football_league.json")
+    # Завантаження таблиці через модуль storage.py
+    tournament_table = storage.load_dictionary("football_league.json")
 
     # Якщо файл відсутній або порожній - ініціалізуємо n = 10 команд
     if not tournament_table:
@@ -132,7 +132,7 @@ def main() -> None:
             "Олександрія": "30",
             "Оболонь": "26"
         }
-        Storage.save_dictionary(tournament_table, "football_league.json")
+        storage.save_dictionary(tournament_table, "football_league.json")
 
     while True:
         show_menu()
@@ -158,11 +158,11 @@ def main() -> None:
         elif choice == "9":
             analytics.display_statistics(tournament_table)
         elif choice == "10":
-            Storage.export_to_txt(tournament_table, "football_export.txt")
+            storage.export_to_txt(tournament_table, "football_export.txt")
         elif choice == "11":
-            Storage.save_dictionary(tournament_table, "football_league.json")
+            storage.save_dictionary(tournament_table, "football_league.json")
         elif choice == "0":
-            Storage.save_dictionary(tournament_table, "football_league.json")
+            storage.save_dictionary(tournament_table, "football_league.json")
             print("Усі дані збережено. Роботу програми завершено!")
             break
         else:
