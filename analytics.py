@@ -1,3 +1,9 @@
+"""
+Модуль analytics.py
+Аналітика турнірної таблиці, сортування команд та валідація введених даних.
+"""
+
+
 def validate_text_input(prompt: str) -> str:
     """
     Захист програми від некоректного введення даних користувачем.
@@ -6,79 +12,89 @@ def validate_text_input(prompt: str) -> str:
     while True:
         user_input = input(prompt).strip()
         if not user_input:
-            print("Помилка: рядок не може бути порожнім. Спробуйте ще раз.")
+            print("Помилка: назва команди не може бути порожньою. Спробуйте ще раз.")
             continue
         
         # Перевірка на наявність літер у рядку
         if any(char.isalpha() for char in user_input):
             return user_input
         else:
-            print("Помилка: введення повинно містити літери.")
+            print("Помилка: назва команди повинна містити літери.")
 
 
-def display_statistics(dictionary: dict) -> None:
+def display_statistics(table: dict) -> None:
     """
-    Аналітичний модуль: загальна кількість слів у словнику,
-    найдовше слово (англійський термін), 
-    найдовший переклад (українське значення), середня довжина слів.
+    Аналітичний модуль для футбольної першості:
+    - загальна кількість команд;
+    - найдовша назва футбольного клубу;
+    - сумарна кількість набраних балів у чемпіонаті;
+    - середня кількість балів на одну команду;
+    - середня довжина назв клубів.
     """
-    print("\n" + "=" * 45)
-    print("           СТАТИСТИКА СЛОВНИКА")
-    print("=" * 45)
-    total_words = len(dictionary)
-    print(f"Загальна кількість записів: {total_words}")
+    print("\n" + "=" * 50)
+    print("           СТАТИСТИКА ТУРНІРНОЇ ТАБЛИЦІ")
+    print("=" * 50)
+    total_teams = len(table)
+    print(f"Загальна кількість команд: {total_teams}")
 
-    if total_words == 0:
-        print("Словник порожній, аналітика недоступна.")
-        print("=" * 45)
+    if total_teams == 0:
+        print("Турнірна таблиця порожня, аналітика недоступна.")
+        print("=" * 50)
         return
 
-    # Пошук найдовшого слова (ключа)
-    longest_word = max(dictionary.keys(), key=len)
-    print(f"Найдовше слово: '{longest_word}' ({len(longest_word)} симв.)")
+    # Пошук найдовшої назви команди
+    longest_team = max(table.keys(), key=len)
+    print(f"Найдовша назва команди:    '{longest_team}' ({len(longest_team)} симв.)")
 
-    # Пошук найдовшого перекладу (значення)
-    longest_translation = max(dictionary.values(), key=len)
-    print(f"Найдовший переклад: '{longest_translation}' ({len(longest_translation)} симв.)")
+    # Безпечний розрахунок балів (переводимо значення у int)
+    numeric_points = [int(p) for p in table.values() if str(p).isdigit()]
+    
+    if numeric_points:
+        total_points = sum(numeric_points)
+        avg_points = total_points / len(numeric_points)
+        print(f"Сума балів усіх команд:    {total_points}")
+        print(f"Середня кількість балів:   {avg_points:.1f}")
 
-    # Розрахунок середньої довжини слів
-    avg_length = sum(len(word) for word in dictionary.keys()) / total_words
-    print(f"Середня довжина термінів: {avg_length:.1f} симв.")
-    print("=" * 45)
+    # Розрахунок середньої довжини назв команд
+    avg_name_length = sum(len(team) for team in table.keys()) / total_teams
+    print(f"Середня довжина назви:     {avg_name_length:.1f} симв.")
+    print("=" * 50)
 
 
-def display_sorted_dictionary(dictionary: dict, reverse: bool = False) -> None:
+def display_sorted_dictionary(table: dict, reverse: bool = False) -> None:
     """
-    Виведення вмісту словника за відсортованими ключами (в алфавітному порядку).
+    Виведення турнірної таблиці за відсортованими назвами команд (в алфавітному порядку).
     Підтримує пряме та зворотне сортування.
     """
-    print("\n" + "-" * 45)
-    order_type = "в зворотному порядку" if reverse else "за алфавітом (A-Z)"
-    print(f"  ВМІСТ СЛОВНИКА ({order_type})")
-    print("-" * 45)
+    print("\n" + "-" * 50)
+    order_type = "в зворотному порядку" if reverse else "за алфавітом (А-Я)"
+    print(f"       ТУРНІРНА ТАБЛИЦЯ ({order_type})")
+    print("-" * 50)
 
-    if not dictionary:
-        print("Словник порожній.")
-        print("-" * 45)
+    if not table:
+        print("Турнірна таблиця порожня.")
+        print("-" * 50)
         return
 
-    sorted_keys = sorted(dictionary.keys(), key=lambda s: s.casefold(), reverse=reverse)
+    sorted_teams = sorted(table.keys(), key=lambda s: s.casefold(), reverse=reverse)
 
-    for index, key in enumerate(sorted_keys, start=1):
-        print(f"{index:>2}. {key:<18} — {dictionary[key]}")
-    print("-" * 45)
+    print(f"{'№':<4} | {'Назва команди':<25} | {'Бали':<10}")
+    print("-" * 50)
+    for index, team in enumerate(sorted_teams, start=1):
+        print(f"{index:>2}.  | {team:<25} | {table[team]:<10}")
+    print("-" * 50)
 
 
 # Автономне тестування модуля (запускається лише при прямому виконанні файлу)
 if __name__ == "__main__":
     test_data = {
-        "apple": "яблуко",
-        "watermelon": "кавун",
-        "sun": "сонце",
-        "extraordinary": "надзвичайний"
+        "Динамо": "68",
+        "Шахтар": "65",
+        "Олександрія": "30",
+        "Кривбас": "57"
     }
-    print("[ТЕСТ] Виклик аналітики:")
+    print("[ТЕСТ] Виклик аналітики турніру:")
     display_statistics(test_data)
     
-    print("\n[ТЕСТ] Сортування:")
+    print("\n[ТЕСТ] Сортування команд:")
     display_sorted_dictionary(test_data)
