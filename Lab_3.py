@@ -1,5 +1,5 @@
 import storage
-import Crud_operations
+import crud_operations
 import search
 import analytics
 
@@ -38,7 +38,7 @@ def print_table(table: dict) -> None:
 
 
 def add_team_dialog(table: dict) -> None:
-    """Додавання нової команди з використанням analytics.py та Crud_operations.py."""
+    """Додавання нової команди з використанням analytics.py та crud_operations.py."""
     team = analytics.validate_text_input("Введіть назву нової команди: ")
 
     while True:
@@ -53,12 +53,12 @@ def add_team_dialog(table: dict) -> None:
             print(f"Помилка, кількість балів ({points_input}) вже належить іншій команді (бали мають бути унікальними).")
             return
 
-        Crud_operations.add_word(table, team, str(points_input))
+        crud_operations.add_word(table, team, str(points_input))
         break
 
 
 def update_points_dialog(table: dict) -> None:
-    """Оновлення кількості балів команди через Crud_operations.py."""
+    """Оновлення кількості балів команди через crud_operations.py."""
     team = input("Введіть назву команди для оновлення балів: ").strip()
 
     while True:
@@ -73,7 +73,7 @@ def update_points_dialog(table: dict) -> None:
             print(f"Помилка: кількість балів ({points_input}) уже закріплена за іншою командою.")
             return
 
-        Crud_operations.update_translation(table, team, str(points_input))
+        crud_operations.update_translation(table, team, str(points_input))
         break
 
 
@@ -150,7 +150,7 @@ def main() -> None:
             update_points_dialog(tournament_table)
         elif choice == "6":
             team_to_delete = input("Введіть назву команди для вилучення: ").strip()
-            Crud_operations.delete_word(tournament_table, team_to_delete)
+            crud_operations.delete_word(tournament_table, team_to_delete)
         elif choice == "7":
             search_team_dialog(tournament_table)
         elif choice == "8":
